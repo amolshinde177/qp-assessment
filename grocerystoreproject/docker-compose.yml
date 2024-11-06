@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  dbservice:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    networks:
+      - grocerystoreprojectnw
+
+  appservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - dbservice
+    environment:
+      POSTGRES_DB: grocery-store
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbservice:5432/grocery-store
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - 9090:9090
+    networks:
+      - grocerystoreprojectnw
+
+networks:
+  grocerystoreprojectnw:
