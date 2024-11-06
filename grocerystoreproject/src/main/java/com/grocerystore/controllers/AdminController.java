@@ -86,23 +86,23 @@ public class AdminController {
 	public ResponseEntity<?> removeAllGroceryItem() {
 		try {
 			groceryItemService.removeAllGroceryItem();
+			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/api/admin/grocery/{item_id}")
 	public ResponseEntity<?> removeGroceryItem(@PathVariable("item_id") Long itemId) {
 		try {
 			groceryItemService.removeGroceryItem(itemId);
+			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	@PatchMapping("/api/admin/grocery/{item_id}")
+	@PatchMapping("/api/admin/grocery/inventory")
 	public ResponseEntity<UpdateInventoryResponse> updateInventory(@RequestBody UpdateInventoryRequest updateInventoryRequest) {
 		UpdateInventoryResponse updateInventoryResponse = null;
 		try {

@@ -1,5 +1,6 @@
 package com.grocerystore.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,13 +11,21 @@ import com.grocerystore.booking.request.AddGroceryItemRequest;
 import com.grocerystore.booking.request.UpdateInventoryRequest;
 import com.grocerystore.booking.response.UpdateInventoryResponse;
 import com.grocerystore.entities.GroceryItem;
+import com.grocerystore.entities.GroceryOrder;
+import com.grocerystore.entities.OrderItem;
 import com.grocerystore.repositories.GroceryItemRepository;
+import com.grocerystore.repositories.GroceryOrderRepository;
+import com.grocerystore.repositories.OrderItemRepository;
 
 @Component
 public class GroceryItemService {
 
 	@Autowired
 	GroceryItemRepository groceryItemRepository;
+	@Autowired
+	OrderItemRepository orderItemRepository;
+	@Autowired
+	GroceryOrderRepository groceryOrderRepository;
 
 	public GroceryItem addGroceryItem(AddGroceryItemRequest addGroceryItemRequest) {
 		GroceryItem groceryItem = new GroceryItem();
@@ -78,11 +87,36 @@ public class GroceryItemService {
 	}
 
 	public void removeAllGroceryItem() {
+		orderItemRepository.deleteAll();
+		groceryOrderRepository.deleteAll();
 		groceryItemRepository.deleteAll();
 	}
 
-	public void removeGroceryItem(Long id) {
-		groceryItemRepository.deleteById(id);
+	public void removeGroceryItem(Long itemId) {
+		List<OrderItem> orderItems = orderItemRepository.findOrderItemByItemId(itemId);
+		List<Long> orderIds = new ArrayList<>();
+		if (orderItems != null && orderItems.size() > 0) {
+			for (OrderItem orderItem : orderItems) {
+				GroceryOrder groceryOrder = orderItem.getGroceryOrder();
+				if (groceryOrder != null && groceryOrder.getId() != null && groceryOrder.getId() > 0) {
+					Long orderId = groceryOrder.getId();
+					orderIds.add(orderId);
+				}
+			}
+			orderItemRepository.deleteOrderItemByItemId(itemId);
+
+			if (orderIds != null && orderIds.size() > 0) {
+				for (Long orderId : orderIds) {
+					orderItems = orderItemRepository.findOrderItemByOrderId(orderId);
+					if (orderItems != null && orderItems.size() > 0) {
+
+					} else {
+						groceryOrderRepository.deleteById(orderId);
+					}
+				}
+			}
+		}
+		groceryItemRepository.deleteById(itemId);
 	}
 
 	public UpdateInventoryResponse updateInventory(UpdateInventoryRequest updateInventoryRequest) {

@@ -18,16 +18,16 @@ public class OrderItem {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "grocery_order_id", nullable = false)
+	@JoinColumn(name = "order_id", nullable = false)
 	private GroceryOrder groceryOrder;
 
 	@ManyToOne
-	@JoinColumn(name = "grocery_item_id", nullable = false)
+	@JoinColumn(name = "item_id", nullable = false)
 	private GroceryItem groceryItem;
 
 	@Column(nullable = false)
 	private Long quantity;
-	
+
 	@Column(nullable = false)
 	private Double price;
 

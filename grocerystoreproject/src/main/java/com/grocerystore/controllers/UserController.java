@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.grocerystore.booking.request.GroceryItemBookingRequest;
 import com.grocerystore.booking.response.GroceryItemBookingResponse;
@@ -52,18 +53,15 @@ public class UserController {
 		}
 	}
 
-	@PostMapping("/api/user/order")
+	@PostMapping("/api/user/grocery/order")
 	public ResponseEntity<GroceryItemBookingResponse> bookGroceryItems(@RequestBody GroceryItemBookingRequest groceryItemBookingRequest) {
 		GroceryItemBookingResponse groceryItemBookingResponse = null;
 		try {
 			groceryItemBookingResponse = groceryOrderService.bookGroceryItems(groceryItemBookingRequest);
-			if (groceryItemBookingResponse != null) {
-
-			}
+			return ResponseEntity.status(HttpStatus.CREATED).body(groceryItemBookingResponse);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(groceryItemBookingResponse);
 	}
 
 }

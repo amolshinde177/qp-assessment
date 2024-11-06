@@ -3,10 +3,13 @@ package com.grocerystore.services;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.grocerystore.booking.request.BookedItemDetails;
 import com.grocerystore.booking.request.GroceryItemBookingRequest;
@@ -51,15 +54,20 @@ public class GroceryOrderService {
 			Long itemId = bookedItem.getItemId();
 			Long quantity = bookedItem.getQuantity();
 
-			GroceryItem groceryItem = groceryItemRepository.findById(itemId).get();
-			Double price = groceryItem.getPrice();
-			totalPrice = quantity * price + totalPrice;
+			Optional<GroceryItem> groceryItemOpt = groceryItemRepository.findById(itemId);
+			if (groceryItemOpt.isPresent()) {
+				GroceryItem groceryItem = groceryItemOpt.get();
+				Double price = groceryItem.getPrice();
+				totalPrice = quantity * price + totalPrice;
 
-			OrderItem orderItem = new OrderItem();
-			orderItem.setGroceryItem(groceryItem);
-			orderItem.setPrice(price);
-			orderItem.setQuantity(quantity);
-			orderItems.add(orderItem);
+				OrderItem orderItem = new OrderItem();
+				orderItem.setGroceryItem(groceryItem);
+				orderItem.setPrice(price);
+				orderItem.setQuantity(quantity);
+				orderItems.add(orderItem);
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with itemId: " + itemId);
+			}
 		}
 
 		GroceryOrder groceryOrder = createGroceryOrderObject(userId, totalPrice);
@@ -82,7 +90,7 @@ public class GroceryOrderService {
 
 		for (OrderItem orderItem : orderItems) {
 			BookedItemDetails bookedItemDetails = new BookedItemDetails();
-			bookedItemDetails.setItemId(orderItem.getId());
+			bookedItemDetails.setItemId(orderItem.getGroceryItem().getId());
 			bookedItemDetails.setQuantity(orderItem.getQuantity());
 			bookedItemDetailsList.add(bookedItemDetails);
 		}
