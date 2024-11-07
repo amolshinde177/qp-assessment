@@ -81,5 +81,6 @@ API endpoints
 	   
 Advanced Thing:
 - We containerized the application using Docker for ease of deployment and scaling.
+- Please generate .jar file for project by running project as Maven install
 Database:
 - Postgres.
