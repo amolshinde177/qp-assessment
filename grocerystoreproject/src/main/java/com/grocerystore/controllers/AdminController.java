@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.grocerystore.booking.request.AddGroceryItemRequest;
 import com.grocerystore.booking.request.UpdateInventoryRequest;
@@ -39,7 +40,7 @@ public class AdminController {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -63,7 +64,7 @@ public class AdminController {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -78,7 +79,7 @@ public class AdminController {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -98,7 +99,7 @@ public class AdminController {
 			groceryItemService.removeGroceryItem(itemId);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -113,7 +114,7 @@ public class AdminController {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
