@@ -8,11 +8,11 @@
 		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.firstspringbootproject</groupId>
+	<groupId>com.grocerybookingproject</groupId>
 	<artifactId>grocerybookingproject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>grocerybookingproject</name>
-	<description>bootjpaproject for learning</description>
+	<description>grocerybooking springbootjpaproject</description>
 	<url/>
 	<licenses>
 		<license/>
